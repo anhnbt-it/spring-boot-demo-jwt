@@ -51,16 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(
                 "/",
                 "/index.html",
-                "/**/*.js",
-                "/**/*.html",
-                "/**/*.css",
-                "/**/*.woff",
-                "/**/*.woff2",
-                "/**/*.svg",
-                "/**/*.ttf",
-                "/**/*.ico",
-                "/**/*.eot",
-                "/**/assets/*",
+                "/**/assets/**",
                 "/api/login/**",
                 "/oauth/token",
                 "/oauth/authorize"
