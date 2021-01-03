@@ -8,7 +8,7 @@
 <div class="jumbotron text-center">
     <div class="container">
         <a href="/" class="lang-logo">
-            <img th:src="@{/assets/images/anhnbt-logo.png}" alt="AnhNBT Logo" class="rounded mx-auto d-block"
+            <img th:src="@{/assets/images/anhnbt-logo.png}" alt="AnhNBT Logo" class="rounded mx-auto d-block mb-3"
                  width="300px">
         </a>
         <h1>Giới thiệu ứng dụng Spring Boot Security và JWT</h1>
@@ -18,9 +18,8 @@
             electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
             Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
             Aldus PageMaker including versions of Lorem Ipsum.</p>
-        <a type="button" class="btn btn-lg btn-light" th:href="@{/hello}"><i class="fas fa-play"></i> Getting
-            Started</a>
-        <a type="button" class="btn btn-lg btn-primary" href="#"><i class="fas fa-download"></i> Source on GitHub</a>
+        <a class="btn btn-lg btn-light" th:href="@{/hello}"><i class="fas fa-play"></i> Getting Started</a>
+        <a class="btn btn-lg btn-primary" href="https://github.com/anhnbt-it/spring-boot-demo-jwt" target="_blank"><i class="fab fa-github"></i> Source on GitHub</a>
     </div>
 </div>
 <!--<div th:replace="~{fragments/footer :: ${#authentication.principal.isAdmin()} ? 'footer-admin' : 'footer'}"/>-->
