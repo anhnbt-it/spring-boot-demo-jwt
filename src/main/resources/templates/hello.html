@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head th:replace="~{fragments/layout :: head}"/>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"/>
+<div class="container">
+    <p>
+        Welcome <span sec:authentication="principal.username">User</span>
+    </p>
+    <p sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></p>
+    <div sec:authorize="hasRole('ROLE_ADMIN')">
+        <h3>You will see this only if you are ADMIN</h3>
+        <p>
+            <a th:href="@{/admin/home}">Admin Home</a>
+        </p>
+    </div>
+    <h3>Form with CSRF Token</h3>
+    <!--    <form th:action="@{/messages}" method="post">-->
+    <!--        <textarea name="content" cols="50" rows="5"></textarea>-->
+    <!--        <br>-->
+    <!--        <input type="submit" value="Submit"/>-->
+    <!--    </form>-->
+    <h2>Users</h2>
+    <p th:each="user: ${users}" th:text="${user.name}"></p>
+</div>
+<!--<div th:replace="~{fragments/footer :: ${#authentication.principal.isAdmin()} ? 'footer-admin' : 'footer'}"/>-->
+<div th:replace="~{fragments/layout :: footer}"/>
+</body>
+</html>
