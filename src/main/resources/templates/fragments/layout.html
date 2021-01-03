@@ -12,7 +12,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="nav">
     <div class="container">
-        <a class="navbar-brand" href="#">AnhNBT</a>
+        <a class="navbar-brand" th:href="@{/}"><img th:src="@{/assets/images/anhnbt-logo.png}" alt="AnhNBT Logo" width="120px"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -29,9 +29,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li th:if="${#authorization.expression('!isAuthenticated()')}" class="nav-item">
-                    <a href="/signin" th:href="@{/signin}" class="nav-link">
-                        <i class="fas fa-sign-in-alt"></i>&nbsp;Sign in
-                    </a>
+                    <button class="btn btn-link nav-link" type="button" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in-alt"></i>&nbsp;Sign in</button>
                 </li>
                 <li th:if="${#authorization.expression('isAuthenticated()')}" class="nav-item">
                     <a href="/logout" th:href="@{#}" onclick="$('#form').submit();" class="nav-link">

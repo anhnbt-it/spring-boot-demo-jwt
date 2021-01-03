@@ -2,21 +2,62 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-  <head th:replace="~{fragments/layout :: head}"/>
+<head th:replace="~{fragments/layout :: head}"/>
 <body>
 <nav th:replace="~{fragments/layout :: nav}"/>
 <div class="jumbotron text-center">
-  <div class="container">
-    <a href="/" class="lang-logo">
-      <img th:src="@{/assets/images/anhnbt-logo.png}" alt="AnhNBT Logo" class="rounded mx-auto d-block" width="300px">
-    </a>
-    <h1>Giới thiệu ứng dụng Spring Boot Security và JWT</h1>
-    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-    <a type="button" class="btn btn-lg btn-light" th:href="@{/hello}"><i class="fas fa-play"></i> Getting Started</a>
-    <a type="button" class="btn btn-lg btn-primary" href="#"><i class="fas fa-download"></i> Source on GitHub</a>
-  </div>
+    <div class="container">
+        <a href="/" class="lang-logo">
+            <img th:src="@{/assets/images/anhnbt-logo.png}" alt="AnhNBT Logo" class="rounded mx-auto d-block"
+                 width="300px">
+        </a>
+        <h1>Giới thiệu ứng dụng Spring Boot Security và JWT</h1>
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+            scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
+            electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
+            Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
+            Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <a type="button" class="btn btn-lg btn-light" th:href="@{/hello}"><i class="fas fa-play"></i> Getting
+            Started</a>
+        <a type="button" class="btn btn-lg btn-primary" href="#"><i class="fas fa-download"></i> Source on GitHub</a>
+    </div>
 </div>
 <!--<div th:replace="~{fragments/footer :: ${#authentication.principal.isAdmin()} ? 'footer-admin' : 'footer'}"/>-->
 <div th:replace="~{fragments/layout :: footer}"/>
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Sign in</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="loginErr" class="d-none">Invalid Email and Password.</div>
+                <form id="loginForm" action="#" th:action="@{/api/login}" method="post">
+                    <div class="form-group">
+                        <label for="username" class="col-form-label">Username:</label>
+                        <input type="text" class="form-control" name="username" id="username"
+                               placeholder="Username"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-form-label">Password:</label>
+                        <input type="password" class="form-control" name="password" id="password"
+                               placeholder="Password"/>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block"
+                                th:text="#{label.login}">Sign in
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
