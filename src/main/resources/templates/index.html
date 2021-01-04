@@ -23,7 +23,6 @@
                 class="fab fa-github"></i> Source on GitHub</a>
     </div>
 </div>
-<!--<div th:replace="~{fragments/footer :: ${#authentication.principal.isAdmin()} ? 'footer-admin' : 'footer'}"/>-->
 <div th:replace="~{fragments/layout :: footer}"/>
 <!-- Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
@@ -37,7 +36,6 @@
                 </button>
             </div>
             <div class="modal-body">
-<!--                <p th:if="${loginError}" class="error">Wrong user or password</p>-->
                 <p id="loginErr" class="d-none alert">Wrong user or password</p>
                 <form id="loginForm" action="#" th:action="@{/api/v1/users/login}" method="post">
                     <fieldset>

@@ -19,7 +19,7 @@ public class JwtUtil {
     // Đoạn JWT_SECRET này là bí mật, chỉ có phía server biết
     private final String JWT_SECRET = "anhnbt";
     //Thời gian có hiệu lực của chuỗi jwt
-    private final long JWT_EXPIRATION = 1000 * 60 * 60 * 10;
+    private final long JWT_EXPIRATION = 1000 * 60 * 60 * 10; // 10h
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
