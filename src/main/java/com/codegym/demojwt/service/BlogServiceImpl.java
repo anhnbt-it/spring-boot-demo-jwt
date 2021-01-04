@@ -34,4 +34,14 @@ public class BlogServiceImpl implements BlogService {
     public Optional<Blog> findById(Long id) {
         return blogRepository.findById(id);
     }
+
+    @Override
+    public Blog save(Blog blog) {
+        return blogRepository.save(blog);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        blogRepository.deleteById(id);
+    }
 }

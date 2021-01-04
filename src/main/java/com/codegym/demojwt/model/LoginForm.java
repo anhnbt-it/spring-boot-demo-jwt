@@ -3,9 +3,9 @@ package com.codegym.demojwt.model;
 import javax.validation.constraints.NotBlank;
 
 public class LoginForm {
-//    @NotBlank
+    @NotBlank
     private String username;
-//    @NotBlank
+    @NotBlank
     private String password;
 
     public String getUsername() {
