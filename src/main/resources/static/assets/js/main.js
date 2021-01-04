@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+
     $("#loginForm").submit(function (event) {
         let t = $(this);
         t.find("fieldset").attr('disabled', 'disabled');
@@ -19,7 +21,12 @@ $(document).ready(function () {
                     $("#loginErr").html(resp.message).removeClass("d-none alert-success").addClass("d-block alert-danger");
                 } else {
                     $("#loginErr").html(resp.message).removeClass("d-none alert-danger").addClass("d-block alert-success");
-                    prompt(resp.status, "Bearer " + resp.data);
+
+                    window.localStorage.setItem("JWT_TOKEN", resp.data);
+                    let token = window.localStorage.getItem("JWT_TOKEN");
+                    console.log(token);
+                    // prompt(resp.status, "Bearer " + resp.data);
+
                 }
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 // If fail
