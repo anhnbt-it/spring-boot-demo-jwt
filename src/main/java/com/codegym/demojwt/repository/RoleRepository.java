@@ -1,10 +1,10 @@
 package com.codegym.demojwt.repository;
 
-import com.codegym.demojwt.model.AppUser;
+import com.codegym.demojwt.model.Role;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends CrudRepository<AppUser, Long> {
-    AppUser findByUsername(String username);
+public interface RoleRepository extends CrudRepository<Role, Long> {
+    Role findByName(String name);
 }

@@ -1,20 +1,24 @@
 package com.codegym.demojwt.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
 
 @Entity
-@Table
-public class Category {
+@Table(name = "roles")
+public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @ManyToMany(mappedBy = "roles")
+    private Set<AppUser> users;
 
-    public Category() {
+    public Role() {
     }
 
-    public Category(Long id) {
-        this.id = id;
+    public Role(String name) {
+        this.name = name;
     }
 
     public Long getId() {
@@ -31,5 +35,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<AppUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<AppUser> users) {
+        this.users = users;
     }
 }

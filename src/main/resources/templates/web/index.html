@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head th:replace="~{fragments/layout :: head}"/>
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:replace="~{fragments/layout-web :: layout (~{::body}, 'index')}">
 <body>
-<nav th:replace="~{fragments/layout :: nav}"/>
 <div class="jumbotron text-center">
     <div class="container">
         <a href="/" class="lang-logo">
@@ -23,8 +22,6 @@
                 class="fab fa-github"></i> Source on GitHub</a>
     </div>
 </div>
-<!--<div th:replace="~{fragments/footer :: ${#authentication.principal.isAdmin()} ? 'footer-admin' : 'footer'}"/>-->
-<div th:replace="~{fragments/layout :: footer}"/>
 <!-- Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
      aria-hidden="true">
@@ -37,7 +34,6 @@
                 </button>
             </div>
             <div class="modal-body">
-<!--                <p th:if="${loginError}" class="error">Wrong user or password</p>-->
                 <p id="loginErr" class="d-none alert">Wrong user or password</p>
                 <form id="loginForm" action="#" th:action="@{/api/v1/users/login}" method="post">
                     <fieldset>
@@ -62,5 +58,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>
