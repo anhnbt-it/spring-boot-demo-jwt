@@ -10,13 +10,6 @@ public class Category {
     private Long id;
     private String name;
 
-    public Category() {
-    }
-
-    public Category(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }

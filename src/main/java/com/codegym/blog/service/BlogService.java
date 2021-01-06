@@ -14,4 +14,8 @@ public interface BlogService {
     Page<Blog> findAllByCategoryId(Long id, Pageable pageable);
 
     Optional<Blog> findById(Long id);
+
+    Blog save(Blog blog);
+
+    void deleteById(Long id);
 }

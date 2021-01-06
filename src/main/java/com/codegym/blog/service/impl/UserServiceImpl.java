@@ -3,6 +3,8 @@ package com.codegym.blog.service.impl;
 import com.codegym.blog.model.User;
 import com.codegym.blog.repository.UserRepository;
 import com.codegym.blog.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -17,6 +19,8 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -24,9 +28,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
+        log.info("ANHNBT-LOGGER: " + username);
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
+        log.info("ANHNBT-LOGGER: " + user.toString());
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 getAuthorities(user));
     }
