@@ -1,31 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout-admin :: head}"></head>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      th:replace="~{fragments/layout-admin :: layout (~{::main}, 'blog')}">
+<head>
+    <title>List of Blogs</title>
+</head>
 <body>
-<nav th:replace="~{fragments/layout-admin :: nav}"></nav>
-<div class="container">
+<main role="main" class="pb-3">
     <div class="card">
         <div class="card-header">
-            <h1 class="h5">
-                <i class="fa fa-bars"></i>
-                <span th:text="${title}"></span>
-                <span th:text="${blogs.totalElements}" class="badge badge-dark"></span>
-                <a th:href="@{/admin/blogs/create}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add
-                    New</a>
-            </h1>
+            <i class="fa fa-bars"></i>
+            <span th:text="#{blogs.title}"></span>
+            <a th:href="@{/admin/blogs/create}" class="btn btn-primary btn-sm float-right" role="button"><i class="fa fa-plus"></i> Add
+                New</a>
         </div>
         <div class="card-body">
-            <form class="form-inline float-right" th:action="@{/admin/blogs}" method="get"
-                  onsubmit="findByTitleContains(this.s.value); return false;">
-                <div class="form-group mx-sm-3 mb-2">
-                    <label for="s" class="sr-only">Name</label>
-                    <input type="text" id="s" name="s" class="form-control"
-                           th:value="${txtSearch.isPresent()} ? ${txtSearch.get()}"
-                           placeholder="Enter Name">
-                </div>
-                <button type="submit" class="btn btn-primary mb-2"><i class="fa fa-search"></i></button>
-            </form>
-            <table class="table table-bordered table-striped">
+            <div class="clearfix">
+                <label>Show <select name="example_length">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select> entries</label>
+                <form class="form-inline float-right" th:action="@{/admin/blogs/search}" method="get"
+                      onsubmit="findByTitleContains(this.s.value); return false;">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="s" class="sr-only">Name</label>
+                        <input type="text" id="s" name="s" class="form-control"
+                               th:value="${txtSearch.isPresent()} ? ${txtSearch.get()}"
+                               placeholder="Enter Name">
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+            <table class="table table-bordered">
                 <thead class="thead-light">
                 <tr>
                     <th scope="col">#</th>
@@ -36,11 +44,8 @@
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:if="${blogs.isEmpty()}">
-                    <td colspan="6">No data.</td>
-                </tr>
-                <tr th:each="blog : ${blogs}" id="blogList">
+                <tbody id="blogList" th:unless="${#lists.isEmpty(blogs)}">
+                <tr th:each="blog : ${blogs}">
                     <th scope="row" th:text="${blog.id}"></th>
                     <td th:text="${blog.image}"></td>
                     <td th:text="${blog.title}"></td>
@@ -60,71 +65,23 @@
                 </tr>
                 </tbody>
             </table>
-            <nav aria-label="Page navigation">
-                <ul class="pagination" id="pagination">
-                    <li class="page-item" th:if="${blogs.hasPrevious()}">
-                        <button type="button" class="page-link" th:onclick="|loadPage(${blogs.number - 1})|">Previous</button>
-                    </li>
-                    <li class="page-item" th:if="${blogs.hasNext()}">
-                        <button type="button" class="page-link" th:onclick="|loadPage(${blogs.number + 1})|">Next</button>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-</div>
-<script>
-    function findByTitleContains(searchKey) {
-        $.ajax({
-            type: 'GET',
-            url: '/admin/blogs/search?s=' + searchKey,
-            dataType: "json",
-            success: renderList
-        });
-    }
-
-    function loadPage(page) {
-        $.ajax({
-            type: 'GET',
-            url: '/admin/blogs/search?page=' + page,
-            dataType: "json",
-            success: renderList
-        });
-    }
-
-    function renderList(data) {
-        let list = data == null ? [] : (data.content instanceof Array ? data.content : [data.content]);
-        $('#blogList tr').remove();
-        if (list.length > 0) {
-            $.each(list, function (index, blog) {
-                let data = `<tr>
-            <td>${blog.id}</td>
-             <td>${blog.image}</td>
-              <td>${blog.title}</td>
-               <td>${blog.category.name}</td>
-                <td>${blog.active}</td>
-            <td>
-                <a href="/blogs/${blog.id}/edit">Edit</a>
-                <a href="/blogs/${blog.id}/delete">Delete</a>
-            </td>
-        </tr>`;
-                $('#blogList').append(data);
-            });
-        } else {
-            $("#blogList").html("<tr><td colspan='5'>No data.</td></tr>");
-        }
-        if (data.totalPages > 1) {
-            let prev = "";
-            let next = "";
-            if (!data.first) {
-                prev = '<button id="prev" type="button" onclick="loadPage(' + (data.number - 1) + ')">Prev</button>';
-            }
-            if (!data.last) {
-                next = '<button id="next" type="button" onclick="loadPage(' + (data.number + 1) + ')">Next</button>';
-            }
-            $("#pagination").html(prev + next);
-        }
-    }
-</script>
+            <div class="clearfix">
+                <span th:text="${'Showing ' + blogs.numberOfElements + ' to ' + blogs.size + ' of ' + blogs.totalElements + ' entries'}"></span>
+                <nav aria-label="Page navigation" class="float-right">
+                    <ul class="pagination" id="pagination">
+                        <li class="page-item" th:if="${blogs.hasPrevious()}">
+                            <button type="button" class="page-link" th:onclick="|loadPage(${blogs.number - 1})|">Previous
+                            </button>
+                        </li>
+                        <li class="page-item" th:if="${blogs.hasNext()}">
+                            <button type="button" class="page-link" th:onclick="|loadPage(${blogs.number + 1})|">Next
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div><!-- /.card-body -->
+    </div><!-- /.card -->
+</main><!-- /.main -->
 </body>
 </html>

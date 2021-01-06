@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      th:replace="~{fragments/layout-web :: layout (~{::main}, 'blog')}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Add New Blog :: AnhNBT</title>
 </head>
 <body>
-<form action="#" th:action="@{/}" th:object="${personForm}" method="post">
+<main role="main" class="pb-3">
+<form action="#" th:action="@{/}" th:object="${blog}" method="post">
     <table>
         <tr>
             <td>Name:</td>
