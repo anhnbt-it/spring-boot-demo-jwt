@@ -5,17 +5,22 @@ import com.codegym.demojwt.model.Role;
 import com.codegym.demojwt.service.RoleService;
 import com.codegym.demojwt.service.UserService;
 import com.codegym.demojwt.service.impl.UserServiceImpl;
+import com.codegym.demojwt.storage.StorageProperties;
+import com.codegym.demojwt.storage.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 
 @SpringBootApplication
+@EnableConfigurationProperties(StorageProperties.class)
 public class JWTApplication implements CommandLineRunner {
 
     Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -30,6 +35,14 @@ public class JWTApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(JWTApplication.class, args);
+    }
+
+    @Bean
+    CommandLineRunner init(StorageService storageService) {
+        return (args) -> {
+            storageService.deleteAll();
+            storageService.init();
+        };
     }
 
     @Override
