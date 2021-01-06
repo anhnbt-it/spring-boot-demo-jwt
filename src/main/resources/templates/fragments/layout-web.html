@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       th:fragment="layout (template, menu)">
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnhNBT :: Spring Framework</title>
+    <title th:text="#{title.home}">AnhNBT :: Spring Framework</title>
     <!-- Standard favicon -->
     <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
-    <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/assets/fontawesome/css/all.min.css}" rel="stylesheet">
+    <link href="/assets/css/bootstrap.min.css" th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="/assets/fontawesome/css/all.min.css" th:href="@{/assets/fontawesome/css/all.min.css}" rel="stylesheet">
 </head>
 
 <body>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
-            <a class="navbar-brand" th:href="@{/}"><img th:src="@{/assets/images/anhnbt-logo.png}" alt="AnhNBT Logo"
-                                                        width="120px"></a>
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/assets/images/anhnbt-logo.png}" th:alt="#{title.home}" width="120px">
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -29,25 +30,31 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" id="navbarSupportedContent">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item" th:classappend="${menu == 'home' ? 'active' : ''}">
-                        <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="#" th:href="@{/}" th:text="#{label.navigation.home.link}">Home <span
+                                class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" th:href="@{/admin/blogs}">Blogs</a>
+                        <a class="nav-link" href="#" th:href="@{/admin/blogs}" th:text="#{label.navigation.blog.link}">Blogs</a>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li th:if="${#authorization.expression('!isAuthenticated()')}" class="nav-item"
-                        th:classappend="${menu == 'login' ? 'active' : ''}">
-                        <a class="nav-link" th:href="@{/login}"><i class="fas fa-sign-in-alt"></i>&nbsp;Sign in</a>
+                    <li sec:authorize="isAnonymous()" class="nav-item">
+                        <a href="/user/register" th:href="@{/user/register}" class="nav-link"
+                           th:text="#{label.navigation.registration.link}">Create user account</a>
+                    </li>
+                    <li sec:authorize="isAnonymous()" class="nav-item">
+                        <a class="nav-link" th:href="@{/login}" th:text="#{label.navigation.login.link}">Sign in</a>
                     </li>
                     <li th:if="${#authorization.expression('isAuthenticated()')}" class="nav-item">
-                        <a href="/logout" th:href="@{#}" onclick="$('#form').submit();" class="nav-link">
+                        <a href="/logout" th:href="@{#}" onclick="$('#form').submit();" class="nav-link"
+                           th:text="#{label.navigation.logout.link}">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;Logout
                         </a>
                         <form style="visibility: hidden" id="form" method="post" action="#"
                               th:action="@{/logout}"></form>
                     </li>
                 </ul>
+                <span class="navbar-text" sec:authorize="isAuthenticated()" sec:authentication="name">Signed in as</span>
             </div>
         </div>
     </nav>
