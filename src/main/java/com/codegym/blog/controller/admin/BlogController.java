@@ -103,7 +103,6 @@ public class BlogController {
     @GetMapping("edit/{id}")
     public String findById(@PathVariable("id") Long id, Model model, RedirectAttributes redirect) {
         Optional<Blog> blog = blogService.findById(id);
-        ModelAndView modelAndView = new ModelAndView("admin/blogs/edit");
         if (blog.isPresent()) {
             model.addAttribute("blog", blog);
             return "admin/blogs/edit";
