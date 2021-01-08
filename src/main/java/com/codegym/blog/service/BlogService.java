@@ -7,11 +7,11 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface BlogService {
-    Page<Blog> findAll(Pageable pageable);
+    Page<Blog> findAll(Integer pageNo, Integer pageSize, String sortBy);
 
-    Page<Blog> findAllByTitleContains(String title, Pageable pageable);
+    Page<Blog> findAllByTitleContains(String title, Integer pageNo, Integer pageSize, String sortBy);
 
-    Page<Blog> findAllByCategoryId(Long id, Pageable pageable);
+    Page<Blog> findAllBlogsByCategoryId(Long id, Integer pageNo, Integer pageSize, String sortBy);
 
     Optional<Blog> findById(Long id);
 

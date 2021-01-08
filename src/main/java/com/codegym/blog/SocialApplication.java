@@ -39,7 +39,7 @@ public class SocialApplication implements CommandLineRunner {
     @Bean
     CommandLineRunner init(StorageService storageService) {
         return (args) -> {
-            storageService.deleteAll();
+//            storageService.deleteAll();
             storageService.init();
         };
     }

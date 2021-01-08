@@ -1,5 +1,7 @@
 package com.codegym.blog.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -17,10 +19,10 @@ public class Blog implements Serializable {
     private String title;
     @Column(columnDefinition = "TEXT", nullable = false)
     @NotEmpty(message = "Message is required.")
-    private String text;
+    private String content;
     @Basic(optional = false)
     @NotEmpty(message = "Summary is required.")
-    private String image;
+    private String imageURL;
     @Column(columnDefinition = "boolean default false")
     private Boolean active;
     private Date lastModifiedDate;
@@ -30,6 +32,9 @@ public class Blog implements Serializable {
             referencedColumnName = "id"
     )
     private Category category;
+
+    @Transient
+    private MultipartFile imageData;
 
     public Long getId() {
         return id;
@@ -47,20 +52,20 @@ public class Blog implements Serializable {
         this.title = title;
     }
 
-    public String getText() {
-        return text;
+    public String getContent() {
+        return content;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setContent(String text) {
+        this.content = text;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageURL(String image) {
+        this.imageURL = image;
     }
 
     public Boolean getActive() {
@@ -79,16 +84,26 @@ public class Blog implements Serializable {
         this.category = category;
     }
 
+
+    public MultipartFile getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(MultipartFile imageData) {
+        this.imageData = imageData;
+    }
+
     @Override
     public String toString() {
         return "Blog{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", text='" + text + '\'' +
-                ", image='" + image + '\'' +
+                ", content='" + content + '\'' +
+                ", imageURL='" + imageURL + '\'' +
                 ", active=" + active +
                 ", lastModifiedDate=" + lastModifiedDate +
                 ", category=" + category +
+                ", imageData=" + imageData +
                 '}';
     }
 }

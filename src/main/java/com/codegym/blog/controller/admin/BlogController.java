@@ -4,20 +4,27 @@ import com.codegym.blog.model.Blog;
 import com.codegym.blog.model.Category;
 import com.codegym.blog.service.BlogService;
 import com.codegym.blog.service.CategoryService;
+import com.codegym.blog.storage.StorageException;
+import com.codegym.blog.storage.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
+import java.nio.file.Path;
 import java.util.Optional;
 
 @Controller
@@ -32,6 +39,9 @@ public class BlogController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private StorageService storageService;
+
     @ModelAttribute("categories")
     public Iterable<Category> categories() {
         Iterable<Category> categories = categoryService.findAll();
@@ -39,26 +49,33 @@ public class BlogController {
     }
 
     @GetMapping
-    public String index(@RequestParam("s") Optional<String> s, Pageable pageable, Model model) {
+    public ModelAndView index(@RequestParam("s") Optional<String> s,
+                        @RequestParam(defaultValue = "0") Integer pageNo,
+                        @RequestParam(defaultValue = "10") Integer pageSize,
+                        @RequestParam(defaultValue = "id") String sortBy) {
         Page<Blog> blogs;
         if (s.isPresent()) {
-            blogs = blogService.findAllByTitleContains(s.get(), pageable);
+            blogs = blogService.findAllByTitleContains(s.get(), pageNo, pageSize, sortBy);
         } else {
-            blogs = blogService.findAll(pageable);
+            blogs = blogService.findAll(pageNo, pageSize, sortBy);
         }
-        model.addAttribute("blogs", blogs);
-        model.addAttribute("txtSearch", s);
-        return "admin/blogs/index";
+        ModelAndView modelAndView = new ModelAndView("admin/blogs/index");
+        modelAndView.addObject("blogs", blogs);
+        modelAndView.addObject("txtSearch", s);
+        return modelAndView;
     }
 
     @GetMapping(value = "search", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Page<Blog> findAllByTitleContains(@RequestParam("s") Optional<String> s, Pageable pageable) {
+    public Page<Blog> findAllByTitleContains(@RequestParam("s") Optional<String> s,
+                                             @RequestParam(defaultValue = "0") Integer pageNo,
+                                             @RequestParam(defaultValue = "10") Integer pageSize,
+                                             @RequestParam(defaultValue = "id") String sortBy) {
         Page<Blog> blogs;
         if (s.isPresent()) {
-            blogs = blogService.findAllByTitleContains(s.get(), pageable);
+            blogs = blogService.findAllByTitleContains(s.get(), pageNo, pageSize, sortBy);
         } else {
-            blogs = blogService.findAll(pageable);
+            blogs = blogService.findAll(pageNo, pageSize, sortBy);
         }
         return blogs;
     }
@@ -83,9 +100,18 @@ public class BlogController {
     }
 
     @PostMapping
-    public String saveBlog(@Valid @ModelAttribute("blog") Blog blog, BindingResult result, RedirectAttributes redirect) {
+    public String saveBlog(@Validated @ModelAttribute("blog") Blog blog, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             return "admin/blogs/create";
+        }
+        try {
+            MultipartFile file = blog.getImageData();
+            storageService.store(file);
+            log.info("ANHNBT: " + file.getOriginalFilename());
+            blog.setImageURL(file.getOriginalFilename());
+        } catch (StorageException e) {
+            blog.setImageURL("150.png");
+            log.info("ANHNBT: ", e);
         }
         blog = blogService.save(blog);
         log.info("Create Blog: " + blog.toString());
@@ -93,8 +119,8 @@ public class BlogController {
         return "redirect:/admin/blogs";
     }
 
-    @GetMapping("delete/{id}")
-    public String deleteById(@PathVariable("id") Long id, RedirectAttributes redirect) {
+    @PostMapping("delete")
+    public String deleteById(@RequestParam("id") Long id, RedirectAttributes redirect) {
         blogService.deleteById(id);
         redirect.addFlashAttribute("globalMessage", "Successfully deleted a blog");
         return "redirect:/admin/blogs";
@@ -110,5 +136,14 @@ public class BlogController {
             redirect.addFlashAttribute("Blog with ID " + id + " not found.");
             return "redirect:/admin/blogs";
         }
+    }
+
+    @GetMapping("/files/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+
+        Resource file = storageService.loadAsResource(filename);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 }

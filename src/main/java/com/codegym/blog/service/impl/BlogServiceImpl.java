@@ -5,7 +5,9 @@ import com.codegym.blog.repository.BlogRepository;
 import com.codegym.blog.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,18 +19,21 @@ public class BlogServiceImpl implements BlogService {
     private BlogRepository blogRepository;
 
     @Override
-    public Page<Blog> findAll(Pageable pageable) {
-        return blogRepository.findAll(pageable);
+    public Page<Blog> findAll(Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        return blogRepository.findAll(paging);
     }
 
     @Override
-    public Page<Blog> findAllByTitleContains(String title, Pageable pageable) {
-        return blogRepository.findAllByTitleContains(title, pageable);
+    public Page<Blog> findAllByTitleContains(String title, Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        return blogRepository.findAllByTitleContains(title, paging);
     }
 
     @Override
-    public Page<Blog> findAllByCategoryId(Long id, Pageable pageable) {
-        return blogRepository.findAllByCategoryId(id, pageable);
+    public Page<Blog> findAllBlogsByCategoryId(Long id, Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        return blogRepository.findAllByCategoryId(id, paging);
     }
 
     @Override

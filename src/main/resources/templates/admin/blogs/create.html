@@ -7,10 +7,8 @@
 </head>
 <body>
 <main role="main" class="pb-3">
-    <ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
-        <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-    </ul>
-    <form action="#" th:action="@{/admin/blogs}" th:object="${blog}" method="post">
+    <div th:if="${#fields.hasErrors('${blog.*}')}">...</div>
+    <form action="#" th:action="@{/admin/blogs}" th:object="${blog}" enctype="multipart/form-data" method="post">
         <div class="row form-group">
             <label class="col-form-label col-md-2">Title <span
                     class="text-danger">*</span>:</label>
@@ -30,16 +28,17 @@
         <div class="row form-group">
             <label class="col-form-label col-md-2">Image:</label>
             <div class="col-md-10">
-                <input type="text" th:field="*{image}" class="form-control" placeholder="Optional..">
-                <p th:if="${#fields.hasErrors('image')}" th:errors="*{image}">Image Error</p>
+                <input type="file" th:field="*{imageData}" class="form-control">
+                <input type="hidden" th:field="*{imageURL}">
+                <p th:if="${#fields.hasErrors('imageData')}" th:errors="*{imageData}">Image Error</p>
             </div>
         </div>
         <div class="row form-group">
             <label class="col-form-label col-md-2">Content <span
                     class="text-danger">*</span>:</label>
             <div class="col-md-10">
-                <textarea th:field="*{text}" cols="30" rows="10" class="form-control"></textarea>
-                <p th:if="${#fields.hasErrors('text')}" th:errors="*{text}">Content Error</p>
+                <textarea th:field="*{content}" cols="30" rows="10" class="form-control"></textarea>
+                <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Content Error</p>
 
             </div>
         </div>
