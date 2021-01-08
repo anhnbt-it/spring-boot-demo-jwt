@@ -105,18 +105,18 @@ public class BlogController {
 
     @PostMapping
     public String saveBlog(@Validated @ModelAttribute("blog") Blog blog, BindingResult result, RedirectAttributes redirect) {
+        MultipartFile file = blog.getImageData();
+        customFileValidator.validate(blog, result);
+        if (result.hasErrors()) {
+            return "admin/blogs/create";
+        }
         try {
-            MultipartFile file = blog.getImageData();
-            customFileValidator.validate(blog, result);
             storageService.store(file);
             log.info("ANHNBT: " + file.getOriginalFilename());
             blog.setImageURL(file.getOriginalFilename());
         } catch (StorageException e) {
             blog.setImageURL("150.png");
             log.info("ANHNBT: ", e);
-        }
-        if (result.hasErrors()) {
-            return "admin/blogs/create";
         }
         blog = blogService.save(blog);
         log.info("Create Blog: " + blog.toString());
