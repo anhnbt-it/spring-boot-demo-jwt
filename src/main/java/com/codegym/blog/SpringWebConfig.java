@@ -1,6 +1,9 @@
 package com.codegym.blog;
 
+import com.codegym.blog.formater.BlogFormatter;
+import com.codegym.blog.formater.DateFormatter;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
@@ -18,12 +21,20 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.Locale;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class SpringWebConfig implements WebMvcConfigurer, ApplicationContextAware {
+
+    private ApplicationContext applicationContext;
+
+    @Autowired
+    private BlogFormatter blogFormatter;
+
+    @Autowired
+    private DateFormatter dateFormatter;
 
     /*
      * Cấu hình này để set cấu hình Encoding UTF-8
      */
-    @Bean
+    @Bean(name = "messageResource")
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("messages");
@@ -61,5 +72,17 @@ public class WebConfig implements WebMvcConfigurer {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
         bean.setValidationMessageSource(messageSource());
         return bean;
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        WebMvcConfigurer.super.addFormatters(registry);
+        registry.addFormatter(blogFormatter);
+        registry.addFormatter(dateFormatter);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

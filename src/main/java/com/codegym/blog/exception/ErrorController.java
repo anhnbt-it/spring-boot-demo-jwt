@@ -1,4 +1,4 @@
-package com.codegym.blog.customerror;
+package com.codegym.blog.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

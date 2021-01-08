@@ -6,7 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "blogs")
@@ -24,7 +24,10 @@ public class Blog implements Serializable {
     private String imageURL;
     @Column(columnDefinition = "boolean default false")
     private Boolean active;
-    private Date lastModifiedDate;
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime updatedAt;
     @ManyToOne
     @JoinColumn(
             name = "category_id",
@@ -55,16 +58,16 @@ public class Blog implements Serializable {
         return content;
     }
 
-    public void setContent(String text) {
-        this.content = text;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(String image) {
-        this.imageURL = image;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public Boolean getActive() {
@@ -75,6 +78,22 @@ public class Blog implements Serializable {
         this.active = active;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -82,7 +101,6 @@ public class Blog implements Serializable {
     public void setCategory(Category category) {
         this.category = category;
     }
-
 
     public MultipartFile getImageData() {
         return imageData;
@@ -100,7 +118,8 @@ public class Blog implements Serializable {
                 ", content='" + content + '\'' +
                 ", imageURL='" + imageURL + '\'' +
                 ", active=" + active +
-                ", lastModifiedDate=" + lastModifiedDate +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 ", category=" + category +
                 ", imageData=" + imageData +
                 '}';
