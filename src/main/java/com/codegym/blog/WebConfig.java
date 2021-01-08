@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,15 +18,11 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.Locale;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
+public class WebConfig implements WebMvcConfigurer {
 
-    private ApplicationContext applicationContext;
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
+    /*
+     * Cấu hình này để set cấu hình Encoding UTF-8
+     */
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -34,6 +31,10 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         return messageSource;
     }
 
+    /*
+     * Cấu hình hỗ trợ chuyển đổi ngôn ngữ
+     * Sử dụng ?locale=vi_VN
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
@@ -41,10 +42,24 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         registry.addInterceptor(interceptor);
     }
 
+    /*
+     * Cấu hình ngôn ngữ mặc định là en_US
+     */
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();
         localeResolver.setDefaultLocale(new Locale("en", "US"));
         return localeResolver;
+    }
+
+    /*
+     * Cấu hình sử dụng Message Source trong Spring Validation
+     */
+
+    @Bean
+    public LocalValidatorFactoryBean getValidator() {
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource());
+        return bean;
     }
 }

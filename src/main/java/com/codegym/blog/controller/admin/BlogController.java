@@ -6,6 +6,7 @@ import com.codegym.blog.service.BlogService;
 import com.codegym.blog.service.CategoryService;
 import com.codegym.blog.storage.StorageException;
 import com.codegym.blog.storage.StorageService;
+import com.codegym.blog.validator.CustomFileValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class BlogController {
     Logger log = LoggerFactory.getLogger(BlogController.class);
 
     @Autowired
+    CustomFileValidator customFileValidator;
+
+    @Autowired
     private BlogService blogService;
 
     @Autowired
@@ -50,9 +54,9 @@ public class BlogController {
 
     @GetMapping
     public ModelAndView index(@RequestParam("s") Optional<String> s,
-                        @RequestParam(defaultValue = "0") Integer pageNo,
-                        @RequestParam(defaultValue = "10") Integer pageSize,
-                        @RequestParam(defaultValue = "id") String sortBy) {
+                              @RequestParam(defaultValue = "0") Integer pageNo,
+                              @RequestParam(defaultValue = "10") Integer pageSize,
+                              @RequestParam(defaultValue = "id") String sortBy) {
         Page<Blog> blogs;
         if (s.isPresent()) {
             blogs = blogService.findAllByTitleContains(s.get(), pageNo, pageSize, sortBy);
@@ -101,17 +105,18 @@ public class BlogController {
 
     @PostMapping
     public String saveBlog(@Validated @ModelAttribute("blog") Blog blog, BindingResult result, RedirectAttributes redirect) {
-        if (result.hasErrors()) {
-            return "admin/blogs/create";
-        }
         try {
             MultipartFile file = blog.getImageData();
+            customFileValidator.validate(blog, result);
             storageService.store(file);
             log.info("ANHNBT: " + file.getOriginalFilename());
             blog.setImageURL(file.getOriginalFilename());
         } catch (StorageException e) {
             blog.setImageURL("150.png");
             log.info("ANHNBT: ", e);
+        }
+        if (result.hasErrors()) {
+            return "admin/blogs/create";
         }
         blog = blogService.save(blog);
         log.info("Create Blog: " + blog.toString());

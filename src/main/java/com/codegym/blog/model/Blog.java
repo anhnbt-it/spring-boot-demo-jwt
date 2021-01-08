@@ -14,14 +14,13 @@ public class Blog implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(min = 2, max = 55)
-    @NotEmpty(message = "Title must not be null or empty!")
+    @Size(min = 2, max = 55, message = "{label.title.size}")
+    @NotEmpty(message = "{label.title.empty}")
     private String title;
     @Column(columnDefinition = "TEXT", nullable = false)
-    @NotEmpty(message = "Message is required.")
+    @NotEmpty(message = "{label.content.empty}")
     private String content;
     @Basic(optional = false)
-    @NotEmpty(message = "Summary is required.")
     private String imageURL;
     @Column(columnDefinition = "boolean default false")
     private Boolean active;
