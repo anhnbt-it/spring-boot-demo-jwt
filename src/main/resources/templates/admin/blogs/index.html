@@ -58,7 +58,7 @@
                         <span th:class="${blog.active} ? 'badge badge-success' : 'badge badge-danger'"
                               th:text="${blog.active} ? 'Enabled' : 'Disabled'"></span>
                     </td>
-                    <td th:text="${blog.createdAt}"></td>
+                    <td th:text="${{blog.createdAt}}"></td>
                     <td>
                         <a th:href="@{/admin/blogs/edit/{id}(id=${blog.id})}" class="btn btn-success btn-sm">
                             <i class="fas fa-edit"></i>

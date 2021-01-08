@@ -20,19 +20,19 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Page<Blog> findAll(Integer pageNo, Integer pageSize, String sortBy) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, sortBy));
         return blogRepository.findAll(paging);
     }
 
     @Override
     public Page<Blog> findAllByTitleContains(String title, Integer pageNo, Integer pageSize, String sortBy) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, sortBy));
         return blogRepository.findAllByTitleContains(title, paging);
     }
 
     @Override
     public Page<Blog> findAllBlogsByCategoryId(Long id, Integer pageNo, Integer pageSize, String sortBy) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, sortBy));
         return blogRepository.findAllByCategoryId(id, paging);
     }
 
